@@ -15,10 +15,9 @@ var mainTmpl = `{{define "main" }} {{ template "base" . }} {{ end }}`
 
 // create a buffer pool
 func init() {
-    bufpool = bpool.NewBufferPool(64)
+	bufpool = bpool.NewBufferPool(64)
 	log.Println("buffer allocation successful")
 }
-
 
 type TemplateConfig struct {
 	TemplateLayoutPath  string
@@ -30,26 +29,25 @@ type TemplateError struct {
 }
 
 func (e *TemplateError) Error() string {
-    return e.s
+	return e.s
 }
 
 func NewError(text string) error {
 	return &TemplateError{text}
-} 
+}
 
 var templateConfig *TemplateConfig
 
 func SetTemplateConfig(layoutPath, includePath string) {
-	templateConfig = &TemplateConfig {layoutPath, includePath }
+	templateConfig = &TemplateConfig{layoutPath, includePath}
 }
-
 
 func LoadTemplates() (err error) {
 
-    if templateConfig == nil {
-        err = NewError("TemplateConfig not initialized")
-        return err
-    }
+	if templateConfig == nil {
+		err = NewError("TemplateConfig not initialized")
+		return err
+	}
 	if templates == nil {
 		templates = make(map[string]*template.Template)
 	}
@@ -76,13 +74,13 @@ func LoadTemplates() (err error) {
 		templates[fileName], err = mainTemplate.Clone()
 		if err != nil {
 			return err
-		}	
+		}
 		templates[fileName] = template.Must(templates[fileName].ParseFiles(files...))
 	}
 
 	log.Println("templates loading successful")
 	return nil
-	
+
 }
 
 func RenderTemplate(w http.ResponseWriter, name string, data interface{}) error {
@@ -91,7 +89,7 @@ func RenderTemplate(w http.ResponseWriter, name string, data interface{}) error 
 		http.Error(w, fmt.Sprintf("The template %s does not exist.", name),
 			http.StatusInternalServerError)
 		err := NewError("Template doesn't exist")
-        return err
+		return err
 	}
 
 	buf := bufpool.Get()
@@ -101,7 +99,7 @@ func RenderTemplate(w http.ResponseWriter, name string, data interface{}) error 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		err := NewError("Template execution failed")
-        return err
+		return err
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

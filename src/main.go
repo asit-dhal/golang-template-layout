@@ -1,13 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"templmanager"
-	"encoding/json"
-    "os"
 )
-
 
 type UserData struct {
 	Name        string
@@ -20,12 +19,11 @@ type SkillSet struct {
 	Level    string
 }
 
-
 type SkillSets []*SkillSet
 
 type Configuration struct {
-    LayoutPath    string
-    IncludePath   string
+	LayoutPath  string
+	IncludePath string
 }
 
 func loadConfiguration(fileName string) {
@@ -34,28 +32,36 @@ func loadConfiguration(fileName string) {
 	configuration := Configuration{}
 	err := decoder.Decode(&configuration)
 	if err != nil {
-  		log.Println("error:", err)	
+		log.Println("error:", err)
 	}
 	log.Println("layout path: ", configuration.LayoutPath)
 	log.Println("include path: ", configuration.IncludePath)
-	templmanager.SetTemplateConfig(configuration.LayoutPath,  configuration.IncludePath)
+	templmanager.SetTemplateConfig(configuration.LayoutPath, configuration.IncludePath)
 }
 
-
 func index(w http.ResponseWriter, r *http.Request) {
-	templmanager.RenderTemplate(w, "index.tmpl", nil)
+	err := templmanager.RenderTemplate(w, "index.tmpl", nil)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func aboutMe(w http.ResponseWriter, r *http.Request) {
 	userData := &UserData{Name: "Asit Dhal", City: "Bhubaneswar", Nationality: "Indian"}
-	templmanager.RenderTemplate(w, "aboutme.tmpl", userData)
+	err := templmanager.RenderTemplate(w, "aboutme.tmpl", userData)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func skillSet(w http.ResponseWriter, r *http.Request) {
 	skillSets := SkillSets{&SkillSet{Language: "Golang", Level: "Beginner"},
 		&SkillSet{Language: "C++", Level: "Advanced"},
 		&SkillSet{Language: "Python", Level: "Advanced"}}
-	templmanager.RenderTemplate(w, "skillset.tmpl", skillSets)
+	err := templmanager.RenderTemplate(w, "skillset.tmpl", skillSets)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func main() {
