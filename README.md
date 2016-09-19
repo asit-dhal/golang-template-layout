@@ -1,0 +1,1 @@
+Working example of https://medium.com/@asitdhal/golang-template-2-template-composition-and-how-to-organize-template-files-4cb40bcdf8f6#.mfny53p5w
