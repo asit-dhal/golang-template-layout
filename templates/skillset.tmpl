@@ -1,0 +1,21 @@
+{{define "title"}}Skillset{{end}}
+{{define "content"}}
+<h3>My Skillset</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Language</th>
+            <th>Level</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{ range . }}
+        <tr>
+            <td>{{ .Language }}</td>
+            <td>{{ .Level }}</td>
+        </tr>
+    {{ end }}
+    </tbody>
+</table>
+<p> <a href="/">Home</a></p>
+{{end}}
